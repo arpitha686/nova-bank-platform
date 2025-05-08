@@ -4,29 +4,38 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Link, useNavigate } from 'react-router-dom';
-import { useBanking } from '@/contexts/BankingContext';
 import MainLayout from '@/components/layouts/MainLayout';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useBanking();
   const navigate = useNavigate();
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulate network delay
-    setTimeout(() => {
-      const success = login(email, password);
-      setIsLoading(false);
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
       
-      if (success) {
+      if (error) {
+        toast.error(error.message);
+      } else {
+        // Auth state change will handle navigation and success message
         navigate('/dashboard');
       }
-    }, 1000);
+    } catch (error) {
+      console.error('Login error:', error);
+      toast.error('An unexpected error occurred');
+    } finally {
+      setIsLoading(false);
+    }
   };
   
   return (
@@ -71,8 +80,8 @@ const Login = () => {
               
               <div className="text-sm text-muted-foreground pt-2">
                 <p>Demo accounts:</p>
-                <p>User: john@example.com / any password</p>
-                <p>Admin: admin@example.com / any password</p>
+                <p>User: john@example.com / password123</p>
+                <p>Admin: admin@example.com / admin123</p>
               </div>
             </CardContent>
             <CardFooter className="flex flex-col">
