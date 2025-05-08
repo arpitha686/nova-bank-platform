@@ -3,6 +3,7 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { CreditCard } from 'lucide-react';
 import { Account } from '@/types';
+import { formatCurrency } from '@/lib/utils';
 
 interface AccountCardProps {
   account: Account;
@@ -14,7 +15,11 @@ const AccountCard = ({ account }: AccountCardProps) => {
       <CardContent className="p-6">
         <div className="flex justify-between items-start">
           <div>
-            <p className="text-sm font-medium opacity-90 mb-1">{account.type === 'checking' ? 'Checking Account' : 'Savings Account'}</p>
+            <p className="text-sm font-medium opacity-90 mb-1">
+              {account.type === 'checking' ? 'Checking Account' : 
+               account.type === 'savings' ? 'Savings Account' : 
+               'Fixed Deposit'}
+            </p>
             <h3 className="text-lg font-semibold">{account.name}</h3>
           </div>
           <CreditCard className="h-6 w-6" />
@@ -23,7 +28,7 @@ const AccountCard = ({ account }: AccountCardProps) => {
         <div className="mt-6">
           <p className="text-sm opacity-90 mb-1">Current Balance</p>
           <h2 className="text-2xl font-bold">
-            {account.balance.toLocaleString('en-US', { style: 'currency', currency: account.currency })}
+            {formatCurrency(account.balance)}
           </h2>
         </div>
         

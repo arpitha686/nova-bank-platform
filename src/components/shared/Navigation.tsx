@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, CreditCard, ArrowRight, Settings, Users, BarChart, LogOut } from 'lucide-react';
+import { Home, CreditCard, ArrowRight, Settings, Users, BarChart, LogOut, PlusCircle, Banknote } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { useBanking } from '@/contexts/BankingContext';
 import { useNavigate } from 'react-router-dom';
@@ -47,6 +47,32 @@ const Navigation = () => {
         </NavLink>
         
         <NavLink 
+          to="/account-request" 
+          className={({ isActive }) =>
+            `flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              isActive 
+                ? 'bg-sidebar-accent text-sidebar-accent-foreground'
+                : 'hover:bg-sidebar-accent/50 text-sidebar-foreground'
+            }`
+          }
+        >
+          <PlusCircle className="mr-3 h-4 w-4" /> New Account
+        </NavLink>
+        
+        <NavLink 
+          to="/fund-request" 
+          className={({ isActive }) =>
+            `flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              isActive 
+                ? 'bg-sidebar-accent text-sidebar-accent-foreground'
+                : 'hover:bg-sidebar-accent/50 text-sidebar-foreground'
+            }`
+          }
+        >
+          <Banknote className="mr-3 h-4 w-4" /> Request Funds
+        </NavLink>
+        
+        <NavLink 
           to="/transfer" 
           className={({ isActive }) =>
             `flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
@@ -67,6 +93,19 @@ const Navigation = () => {
           <div className="px-3 py-2">
             <h3 className="text-xs font-semibold text-sidebar-foreground/70">Admin</h3>
           </div>
+          <NavLink 
+            to="/admin" 
+            className={({ isActive }) =>
+              `flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                isActive 
+                  ? 'bg-sidebar-accent text-sidebar-accent-foreground'
+                  : 'hover:bg-sidebar-accent/50 text-sidebar-foreground'
+              }`
+            }
+          >
+            <Users className="mr-3 h-4 w-4" /> Admin Panel
+          </NavLink>
+          
           <NavLink 
             to="/admin/users" 
             className={({ isActive }) =>
