@@ -2,22 +2,36 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { CreditCard } from 'lucide-react';
-import { Account } from '@/types';
 import { formatCurrency } from '@/lib/utils';
 
 interface AccountCardProps {
-  account: Account;
+  account: {
+    id: string;
+    name: string;
+    type?: string;
+    account_type?: string;
+    balance: number;
+    cardNumber?: string;
+    card_number?: string;
+    cardExpiry?: string;
+    card_expiry?: string;
+  };
 }
 
 const AccountCard = ({ account }: AccountCardProps) => {
+  // Handle both property naming conventions
+  const accountType = account.type || account.account_type;
+  const cardNumber = account.cardNumber || account.card_number;
+  const cardExpiry = account.cardExpiry || account.card_expiry;
+  
   return (
     <Card className="account-card card-gradient text-white">
       <CardContent className="p-6">
         <div className="flex justify-between items-start">
           <div>
             <p className="text-sm font-medium opacity-90 mb-1">
-              {account.type === 'checking' ? 'Checking Account' : 
-               account.type === 'savings' ? 'Savings Account' : 
+              {accountType === 'checking' ? 'Checking Account' : 
+               accountType === 'savings' ? 'Savings Account' : 
                'Fixed Deposit'}
             </p>
             <h3 className="text-lg font-semibold">{account.name}</h3>
@@ -35,11 +49,11 @@ const AccountCard = ({ account }: AccountCardProps) => {
         <div className="mt-5 flex justify-between items-center">
           <div>
             <p className="text-sm opacity-90 mb-1">Card Number</p>
-            <p className="font-medium">{account.cardNumber}</p>
+            <p className="font-medium">{cardNumber}</p>
           </div>
           <div>
             <p className="text-sm opacity-90 mb-1">Expires</p>
-            <p className="font-medium">{account.cardExpiry}</p>
+            <p className="font-medium">{cardExpiry}</p>
           </div>
         </div>
         

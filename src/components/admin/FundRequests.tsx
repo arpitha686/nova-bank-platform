@@ -14,14 +14,14 @@ const FundRequests = () => {
   const { data: requests, isLoading, isError } = useQuery({
     queryKey: ['fundRequests'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('fund_requests')
+      const { data, error } = await (supabase
+        .from('fund_requests' as any)
         .select(`
           *,
           profiles:user_id (first_name, last_name, email),
           accounts:account_id (name, account_number)
         `)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false }) as any);
       
       if (error) throw error;
       return data || [];
@@ -31,11 +31,11 @@ const FundRequests = () => {
   // Approve fund request mutation
   const approveMutation = useMutation({
     mutationFn: async ({ id, accountId, amount, userId }: any) => {
-      // Add the funds to the account
+      // Add the funds to the account using the add_funds function
       const { error: updateError } = await supabase.rpc('add_funds', {
         p_account_id: accountId,
         p_amount: amount
-      });
+      } as any);
       
       if (updateError) throw updateError;
       
@@ -55,13 +55,13 @@ const FundRequests = () => {
       if (transactionError) throw transactionError;
       
       // Update the request status
-      const { error: updateRequestError } = await supabase
-        .from('fund_requests')
+      const { error: updateRequestError } = await (supabase
+        .from('fund_requests' as any)
         .update({ 
           status: 'approved',
           transaction_id: transaction.id
         })
-        .eq('id', id);
+        .eq('id', id) as any);
       
       if (updateRequestError) throw updateRequestError;
       
@@ -92,10 +92,10 @@ const FundRequests = () => {
   const rejectMutation = useMutation({
     mutationFn: async ({ id, userId }: any) => {
       // Update request status
-      const { error } = await supabase
-        .from('fund_requests')
+      const { error } = await (supabase
+        .from('fund_requests' as any)
         .update({ status: 'rejected' })
-        .eq('id', id);
+        .eq('id', id) as any);
       
       if (error) throw error;
       
