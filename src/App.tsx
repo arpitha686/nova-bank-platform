@@ -1,4 +1,5 @@
 
+import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -23,36 +24,39 @@ import AdminUsers from "./pages/admin/AdminUsers";
 import AdminAnalytics from "./pages/admin/AdminAnalytics";
 import NotFound from "./pages/NotFound";
 
+// Initialize QueryClient outside of component to avoid re-creation on renders
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <BankingProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/accounts" element={<Accounts />} />
-            <Route path="/account-request" element={<AccountRequest />} />
-            <Route path="/fund-request" element={<FundRequest />} />
-            <Route path="/transfer" element={<Transfer />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/admin" element={<Admin />} />
-            <Route path="/admin/users" element={<AdminUsers />} />
-            <Route path="/admin/analytics" element={<AdminAnalytics />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </BankingProvider>
-  </QueryClientProvider>
+  <React.StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <BankingProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/accounts" element={<Accounts />} />
+              <Route path="/account-request" element={<AccountRequest />} />
+              <Route path="/fund-request" element={<FundRequest />} />
+              <Route path="/transfer" element={<Transfer />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/admin" element={<Admin />} />
+              <Route path="/admin/users" element={<AdminUsers />} />
+              <Route path="/admin/analytics" element={<AdminAnalytics />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </BankingProvider>
+    </QueryClientProvider>
+  </React.StrictMode>
 );
 
 export default App;
