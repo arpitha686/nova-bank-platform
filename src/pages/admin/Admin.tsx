@@ -36,9 +36,11 @@ const Admin = () => {
       return true;
     },
     retry: false,
-    onError: () => {
-      toast.error('You are not authorized to access this page');
-      navigate('/dashboard');
+    meta: {
+      onError: () => {
+        toast.error('You are not authorized to access this page');
+        navigate('/dashboard');
+      }
     }
   });
 

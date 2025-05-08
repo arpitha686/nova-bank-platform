@@ -100,8 +100,6 @@ const TransactionItem = ({ transaction }: TransactionItemProps) => {
     description = `Payment to ${transaction.recipientName || 'merchant'}`;
     icon = <ArrowUpRight className="h-5 w-5 text-red-500" />;
   }
-
-  const date = new Date(transaction.date);
   
   return (
     <div className="flex items-center justify-between py-4 px-6 hover:bg-muted/50 transition-colors">
@@ -112,7 +110,7 @@ const TransactionItem = ({ transaction }: TransactionItemProps) => {
         <div>
           <p className="font-medium">{description}</p>
           <p className="text-sm text-muted-foreground">
-            {date.toLocaleString('en-IN', { 
+            {transaction.date.toLocaleString('en-IN', { 
               day: '2-digit', 
               month: 'short',
               hour: '2-digit', 

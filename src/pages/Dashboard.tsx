@@ -12,6 +12,7 @@ import { Card } from '@/components/ui/card';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { formatCurrency } from '@/lib/utils';
+import { Transaction } from '@/types';
 
 const Dashboard = () => {
   const { currentUser } = useBanking();
@@ -36,7 +37,7 @@ const Dashboard = () => {
   });
   
   // Fetch recent transactions
-  const { data: transactions = [] } = useQuery({
+  const { data: transactionsData = [] } = useQuery({
     queryKey: ['recentTransactions'],
     queryFn: async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -67,6 +68,19 @@ const Dashboard = () => {
     },
     enabled: !!currentUser && accounts.length > 0
   });
+
+  // Transform Supabase transactions to match our Transaction type
+  const transactions: Transaction[] = transactionsData.map(tx => ({
+    id: tx.id,
+    fromAccountId: tx.from_account_id,
+    toAccountId: tx.to_account_id,
+    amount: tx.amount,
+    type: tx.transaction_type as 'transfer' | 'deposit' | 'withdrawal' | 'payment',
+    status: tx.status as 'pending' | 'completed' | 'failed',
+    description: tx.description || '',
+    date: new Date(tx.created_at),
+    recipientName: tx.recipient_name
+  }));
   
   // Calculate total balance across all accounts
   const totalBalance = accounts.reduce((sum, account) => sum + account.balance, 0);
@@ -80,20 +94,20 @@ const Dashboard = () => {
   
   // Filter transactions from the current month
   const monthlyTransactions = transactions.filter(tx => {
-    const txDate = new Date(tx.created_at);
+    const txDate = tx.date;
     return txDate.getMonth() === currentMonth && txDate.getFullYear() === currentYear;
   });
   
   // Calculate income (deposits to user accounts)
   const monthlyIncome = monthlyTransactions
-    .filter(tx => accounts.some(acc => acc.id === tx.to_account_id) && tx.transaction_type === 'deposit')
+    .filter(tx => accounts.some(acc => acc.id === tx.toAccountId) && tx.type === 'deposit')
     .reduce((sum, tx) => sum + tx.amount, 0);
     
   // Calculate expenses (payments or withdrawals from user accounts)
   const monthlyExpenses = monthlyTransactions
     .filter(tx => 
-      accounts.some(acc => acc.id === tx.from_account_id) && 
-      (tx.transaction_type === 'payment' || tx.transaction_type === 'withdrawal')
+      accounts.some(acc => acc.id === tx.fromAccountId) && 
+      (tx.type === 'payment' || tx.type === 'withdrawal')
     )
     .reduce((sum, tx) => sum + tx.amount, 0);
 
